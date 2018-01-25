@@ -26,19 +26,46 @@ f.close
 # editMatchingAmino takes characterSearch and characterSearchIndex to find the corresponding 
 # similarity symbol ("*", ":", ",", " "). Also take mapLineIndex to track where the loop was in
 # the mapFile array
-def editMatchingAmino(characterSearch, characterSearchIndex, mapLineIndex)
-	# Starts the loop the line after where the match was found with the chainIdentifier
-	# This will check each line for "%%%%%" to ensure it has not gone too far. It next checks
-	# for "|" to ensure it is not on an empty line. lineCount check to make sure the line is
-	# not the first occurrence of "|", but the second.
-	lineCount = 1
+def editMatchingAmino(characterSearch, characterSearchIndex, mapFile, mapLineIndex)
+	p 'edit hello'
+	# Starts the loop the line after where the match was found with the chainIdentifier.
+	# This will check each line for "%%%%%" to ensure it has not gone too far (over to the next 
+	# section). It next checks for "|" to ensure it is not on an empty line. lineCount checks to 
+	# make sure the line is not the first occurrence of "|", but the second. We want to be 
+	# reading along the middle/second line of each data set. Multiple sets can exist in each
+	# section.
+	lineCount = 1 # skips the "|" line when this var == 1
+	numberOfElements = 0 # running total to compare to characterSearchIndex
+
+	# Starts the line after the comparision was made (comparison made in section title only)
 	mapFile[mapLineIndex + 1..-1].each do |editMapLine|
+
+
 		if editMapLine.include?("%%%%%")
 			break
 		elsif lineCount == 0 && editMapLine.include?("|")
 			lineCount = 1
-			holdLineArr = editMapline.split(" ") # temp var that isolates the meat (minus title)
+			
 
+		p editMapLine
+		holdLineArr = editMapLine.split(" ") # temp var that isolates the meat (minus title)
+		
+		# numberOfElements is required to compare to characterSearchIndex. If the count of the
+		# elements in the first line is less than characterSearchIndex we must go to the next
+		# line while ensuring we preserve the value of our count.
+		p holdLineArr
+		numberOfElements += holdLineArr[1].gsub("-", "").length()
+
+
+
+
+
+
+			if numberOfElements <= characterSearchIndex
+				# We need to count backwards here as the spacing after the titles are 
+				# inconsistent. There is only ever one space separating the 
+				
+			end
 		elsif lineCount == 1 && editMapLine.include?("|") # skips first "|" line
 			lineCount == 0
 		end
@@ -57,13 +84,16 @@ inputFile = File.open("5o9z.pdb", "r").each_with_index do |inputLine, index|
 	# Lines before 17217 (216 because index) are copied without modification. 
 	# Tested < 17216 and copies to the line before "ATOM" starts.
 	# Tested > 76514 and copies to the "TER" after the last "ATOM"
+	# if index < 17216 || index > 57514
 	if index < 17216 || index > 76514
 		outputFile.puts(inputLine)
-	elsif (inputLine[0]..[3] == "ATOM") # If the line starts with "ATOM"
-		# We need to grab the character in the 5th column as wel as the number in the 6th column.
+	elsif (inputLine[0..3] == "ATOM") # If the line starts with "ATOM" - Tested and works
+
+		# We need to grab the character in the 5th column as well as the number in the 6th column.
 		# This should be index 4 and 5 of an array split around spaces.
 		characterSearch = inputLine.split(" ")[4]
 		characterSearchIndex = inputLine.split(" ")[5]
+		puts "#{index}, charSearch: #{characterSearch}, charSearchIndex: #{characterSearchIndex}"
 
 		# Now we search for characterSearch in the mapFile.
 		# We do this by looping through the mapFile. If a line contains 5 percent symbols (%%%%%)
@@ -72,13 +102,13 @@ inputFile = File.open("5o9z.pdb", "r").each_with_index do |inputLine, index|
 		mapFile.each_with_index do |mapLine, mapLineIndex|
 			if mapLine.include?("%%%%%")
 				chainIdentifier = mapLine.split("%%%%%")[0] # this will grab eg. "f,m,X"
-				chainIdentifierArray = chainIdentifier.split(",") # split to array eg ['f','m','X']
+				chainIdentifierArray = chainIdentifier.gsub(/s+/, "").split(",") # split to array eg ['f','m','X']
 				 # Compares each to chainIdentifier. 
 				 # If there is a match, calls editMatchingAmino()
 				chainIdentifierArray.each do |letter|
 					if letter == characterSearch
-						# puts "#{characterSearch}, #{characterSearchIndex}, #{index}"
-						editMatchingAmino(characterSearch, characterSearchIndex, mapLineIndex)
+						# puts "#{characterSearch}, #{characterSearchIndex}, #{mapLineIndex}"
+						editMatchingAmino(characterSearch, characterSearchIndex, mapFile, mapLineIndex)
 					end
 				end
 			end
