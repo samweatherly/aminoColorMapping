@@ -115,9 +115,7 @@ inputFile = File.open("5o9z.pdb", "r").each_with_index do |inputLine, index|
 			characterSearchIndex = inputLine.split(" ")[5]
 		end
 
-		puts inputLine
 		inputLine = inputLine[0..59] + " 50.00" + inputLine[66..-1]
-		puts inputLine
 
 		# Copy similary value (B value) from previous line if the characterSearch and 
 		# charaterSearchIndex are identical.
