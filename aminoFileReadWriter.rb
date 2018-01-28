@@ -1,4 +1,3 @@
-
 # First we open and read, line by line, the map/lookup file.
 # We store it in an array, mapFile. We will use this array to determine the similarities of
 # the aminos acids:
@@ -104,13 +103,6 @@ lastSimilarityValue = ""
 outputFile = File.open("amino_automation_output.pdb", "w")
 inputFile = File.open("5o9z.pdb", "r").each_with_index do |inputLine, index|
 
-	# Lines before 17217 (216 because index) are copied without modification. 
-	# Tested < 17216 and copies to the line before "ATOM" starts.
-	# Tested > 76514 and copies to the "TER" after the last "ATOM"
-	# if index < 17216 || index > 57530
-	# if index < 17216 || index > 57771
-	# if index < 17216 || index > 76514
-	# 	outputFile.puts(inputLine)
 	if (inputLine[0..3] == "ATOM") # If the line starts with "ATOM" - Tested and works
 		# We need to grab the character in the 5th column as well as the number in the 6th column.
 		# This should be index 4 and 5 of an array split around spaces.
@@ -123,6 +115,12 @@ inputFile = File.open("5o9z.pdb", "r").each_with_index do |inputLine, index|
 			characterSearchIndex = inputLine.split(" ")[5]
 		end
 
+		puts inputLine
+		inputLine = inputLine[0..59] + " 50.00" + inputLine[66..-1]
+		puts inputLine
+
+		# Copy similary value (B value) from previous line if the characterSearch and 
+		# charaterSearchIndex are identical.
 		if characterSearch.length > 0 && characterSearch == lastCharacterSearch && characterSearchIndex == lastCharacterSearchIndex
 			inputLineSimilarityIndex = inputLine.rindex("50.00")
 			inputLine[inputLineSimilarityIndex..inputLineSimilarityIndex + 4] = lastSimilarityValue
