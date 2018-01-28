@@ -123,7 +123,7 @@ inputFile = File.open("5o9z.pdb", "r").each_with_index do |inputLine, index|
 			characterSearchIndex = inputLine.split(" ")[5]
 		end
 
-		if characterSearch == lastCharacterSearch && characterSearchIndex == lastCharacterSearchIndex
+		if characterSearch.length > 0 && characterSearch == lastCharacterSearch && characterSearchIndex == lastCharacterSearchIndex
 			inputLineSimilarityIndex = inputLine.rindex("50.00")
 			inputLine[inputLineSimilarityIndex..inputLineSimilarityIndex + 5] = lastSimilarityValue
 			outputFile.puts(inputLine)

@@ -4,8 +4,8 @@ Conditions:
   - The title for A WHOLE SECTION (not a line) of data must be preceded by comma separated Chain Identifiers.
 
 To do:
-  - Correct issue with grabbing characterSearch and characterSearchIndex when the index is greater than a 3 digit number.
-  - Change hard coded start on 17217 to start where line[0..3] == "ATOM" (also for values after - 76514+)
+  - DONE - Correct issue with grabbing characterSearch and characterSearchIndex when the index is greater than a 3 digit number.
+  - DONE - Change hard coded start on 17217 to start where line[0..3] == "ATOM" (also for values after - 76514+)
   - Change starting values to all be 50.00 (different in other files)
 
 
