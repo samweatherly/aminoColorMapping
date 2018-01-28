@@ -191,7 +191,7 @@ inputFile = File.open("5o9z.pdb", "r").each_with_index do |inputLine, index|
 		newSimilarityValue = "50.00"
 		case similarityCharacter
 		when "*" # 100% identical
-			newSimilarityValue = " 1.00" # QUESTION FOR KEVIN - SPACING AROUND 1 cause less character than others
+			newSimilarityValue = "1.00 " # QUESTION FOR KEVIN - SPACING AROUND 1 cause less character than others
 			# p similarityCharacter
 		when ":" # similar
 			newSimilarityValue = "25.00"
