@@ -92,10 +92,15 @@ def editMatchingAmino(characterSearch, characterSearchIndex, mapFile, mapLineInd
 end # editMatchingAmino function
 
 
+# These variables will store the most recent search variables. If the current line is the same
+# as the previous line, the output will be a copy of the last.
+lastCharacterSearch = ""
+lastCharacterSearchIndex = ""
+lastSimilarityValue = ""
+
 # inputFile - This is the large file. We will start looking for edits at line 17217 (where ATOM
 # beings) and will continue through to line 76516 (the last TER).
 # Note that the entire file is read and copied to our output file, amino_automation_output.pdb.
-
 outputFile = File.open("amino_automation_output.pdb", "w")
 inputFile = File.open("5o9z.pdb", "r").each_with_index do |inputLine, index|
 
@@ -104,10 +109,9 @@ inputFile = File.open("5o9z.pdb", "r").each_with_index do |inputLine, index|
 	# Tested > 76514 and copies to the "TER" after the last "ATOM"
 	# if index < 17216 || index > 57530
 	# if index < 17216 || index > 57771
-	if index < 17216 || index > 76514
-		outputFile.puts(inputLine)
-	elsif (inputLine[0..3] == "ATOM") # If the line starts with "ATOM" - Tested and works
-
+	# if index < 17216 || index > 76514
+	# 	outputFile.puts(inputLine)
+	if (inputLine[0..3] == "ATOM") # If the line starts with "ATOM" - Tested and works
 		# We need to grab the character in the 5th column as well as the number in the 6th column.
 		# This should be index 4 and 5 of an array split around spaces.
 		characterSearch = inputLine.split(" ")[4]
@@ -118,6 +122,15 @@ inputFile = File.open("5o9z.pdb", "r").each_with_index do |inputLine, index|
 		else
 			characterSearchIndex = inputLine.split(" ")[5]
 		end
+
+		if characterSearch == lastCharacterSearch && characterSearchIndex == lastCharacterSearchIndex
+			inputLineSimilarityIndex = inputLine.rindex("50.00")
+			inputLine[inputLineSimilarityIndex..inputLineSimilarityIndex + 5] = lastSimilarityValue
+			outputFile.puts(inputLine)
+			next
+		end
+
+
 
 		# puts "#{index}, charSearch: #{characterSearch}, charSearchIndex: #{characterSearchIndex}"
 
@@ -202,6 +215,10 @@ inputFile = File.open("5o9z.pdb", "r").each_with_index do |inputLine, index|
 		inputLineSimilarityIndex = inputLine.rindex("50.00")
 		inputLine[inputLineSimilarityIndex..inputLineSimilarityIndex + 5] = newSimilarityValue
 		outputFile.puts(inputLine)
+
+		lastCharacterSearch = characterSearch
+		lastCharacterSearchIndex = characterSearchIndex
+		lastSimilarityValue = newSimilarityValue
 	else
 		outputFile.puts(inputLine)
 	end
