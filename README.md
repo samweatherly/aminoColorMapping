@@ -5,7 +5,8 @@ Conditions:
 
 To do:
   - Correct issue with grabbing characterSearch and characterSearchIndex when the index is greater than a 3 digit number.
-  - Change hard coded start on 17217 to start where line[0..3] == "ATOM" (also for values after)
+  - Change hard coded start on 17217 to start where line[0..3] == "ATOM" (also for values after - 76514+)
+  - Change starting values to all be 50.00 (different in other files)
 
 
 This Ruby script first takes in the database/map file and stores it as an array. It uses this to determine if/when to change data in the modelling file.
