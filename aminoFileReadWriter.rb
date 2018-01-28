@@ -125,7 +125,7 @@ inputFile = File.open("5o9z.pdb", "r").each_with_index do |inputLine, index|
 
 		if characterSearch.length > 0 && characterSearch == lastCharacterSearch && characterSearchIndex == lastCharacterSearchIndex
 			inputLineSimilarityIndex = inputLine.rindex("50.00")
-			inputLine[inputLineSimilarityIndex..inputLineSimilarityIndex + 5] = lastSimilarityValue
+			inputLine[inputLineSimilarityIndex..inputLineSimilarityIndex + 4] = lastSimilarityValue
 			outputFile.puts(inputLine)
 			next
 		end
@@ -213,7 +213,7 @@ inputFile = File.open("5o9z.pdb", "r").each_with_index do |inputLine, index|
 		# similarity status. "*", ":", ".", " " will be changed to "1.00", "25.00", "37.50",
 		# "50.00" respectively
 		inputLineSimilarityIndex = inputLine.rindex("50.00")
-		inputLine[inputLineSimilarityIndex..inputLineSimilarityIndex + 5] = newSimilarityValue
+		inputLine[inputLineSimilarityIndex..inputLineSimilarityIndex + 4] = newSimilarityValue
 		outputFile.puts(inputLine)
 
 		lastCharacterSearch = characterSearch
