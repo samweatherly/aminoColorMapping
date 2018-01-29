@@ -8,7 +8,17 @@
 
 mapFile = []
 # myTest = File.open("testTabsToSpaces", "w")
-f = File.open("Splicing_protein_alignment_database", "r").each_with_index do |line, index|
+databaseFileName = "" # used to store user input of databse/map/lookup file name with extension
+while databaseFileName.length < 1
+	puts "Enter DATABASE/MAP file name with extension. Ensure the file exists in the local directory."
+	databaseFileName = gets.chomp
+	if !File.exist?(databaseFileName) || databaseFileName.length < 2
+		databaseFileName = ""
+		puts "File does not exist in local directory."
+	end
+end
+f = File.open(databaseFileName, "r").each_with_index do |line, index|
+# f = File.open("Splicing_protein_alignment_database", "r").each_with_index do |line, index|
 	if index > 2
 		line.gsub!("\t", "    ") # substitue all occurences of tabs for 4 spaces
 		# myTest.puts(line) # Test to see if tabs to spaces change worked. Appears to be correct.
@@ -100,8 +110,25 @@ lastSimilarityValue = ""
 # inputFile - This is the large file. We will start looking for edits at line 17217 (where ATOM
 # beings) and will continue through to line 76516 (the last TER).
 # Note that the entire file is read and copied to our output file, amino_automation_output.pdb.
-outputFile = File.open("amino_automation_output.pdb", "w")
-inputFile = File.open("5o9z.pdb", "r").each_with_index do |inputLine, index|
+inputFileName = "" # used to store user input of input file with extension
+while inputFileName.length < 1
+	puts "Enter INPUT file name with extension. Ensure the file exists in the local directory."
+	inputFileName = gets.chomp
+	if !File.exist?(inputFileName) || inputFileName.length < 2
+	inputFileName = ""
+	puts "File does not exist in local directory."
+end
+end
+
+outputFileName = "" # used to store user output
+while outputFileName.length < 1
+	puts "Enter OUTPUT file name only (no extension). The file will be '.pdb'."
+	outputFileName = gets.chomp
+end
+puts "Processing..."
+
+outputFile = File.open("#{outputFileName}.pdb", "w")
+inputFile = File.open(inputFileName, "r").each_with_index do |inputLine, index|
 
 	if (inputLine[0..3] == "ATOM") # If the line starts with "ATOM" - Tested and works
 		# We need to grab the character in the 5th column as well as the number in the 6th column.
