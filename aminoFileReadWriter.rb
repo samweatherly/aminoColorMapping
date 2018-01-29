@@ -112,9 +112,9 @@ lastSimilarityValue = ""
 # Note that the entire file is read and copied to our output file, amino_automation_output.pdb.
 inputFileName = "" # used to store user input of input file with extension
 while inputFileName.length < 1
-	puts "Enter INPUT file name with extension. Ensure the file exists in the local directory."
+	puts "Enter INPUT file name only (no extension). File extension will be set to '.pdb'. Ensure the file exists in the local directory."
 	inputFileName = gets.chomp
-	if !File.exist?(inputFileName) || inputFileName.length < 2
+	if !File.exist?(inputFileName + ".pdb") || inputFileName.length < 1
 	inputFileName = ""
 	puts "File does not exist in local directory."
 end
@@ -128,7 +128,7 @@ end
 puts "Processing..."
 
 outputFile = File.open("#{outputFileName}.pdb", "w")
-inputFile = File.open(inputFileName, "r").each_with_index do |inputLine, index|
+inputFile = File.open("#{inputFileName}.pdb", "r").each_with_index do |inputLine, index|
 
 	if (inputLine[0..3] == "ATOM") # If the line starts with "ATOM" - Tested and works
 		# We need to grab the character in the 5th column as well as the number in the 6th column.
