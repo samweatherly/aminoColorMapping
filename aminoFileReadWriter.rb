@@ -75,8 +75,8 @@ def editMatchingAmino(characterSearch, characterSearchIndex, mapFile, mapLineInd
 				mappedIndex = dataIndexStart # will store the total line index of the value we are searching
 				# p holdLineArr
 				holdLineArr[1].split("").each_with_index do |char, arrayIndex|
-					dataElementCount += 1
 					if char.match?(/[A-Z]/)
+					dataElementCount += 1
 						if dataElementCount == characterSearchIndex
 							mappedIndex += arrayIndex
 							break
