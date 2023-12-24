@@ -7,7 +7,6 @@
 # " "	- (a space) no similarities	- 50.00 (default value)
 
 mapFile = []
-# myTest = File.open("testTabsToSpaces", "w")
 databaseFileName = "" # used to store user input of databse/map/lookup file name with extension
 while databaseFileName.length < 1
 	puts "Enter DATABASE/MAP file name with extension. Ensure the file exists in the local directory."
@@ -18,25 +17,18 @@ while databaseFileName.length < 1
 	end
 end
 f = File.open(databaseFileName, "r").each_with_index do |line, index|
-# f = File.open("Splicing_protein_alignment_database", "r").each_with_index do |line, index|
 	if index > 2
 		line.gsub!("\t", "    ") # substitue all occurences of tabs for 4 spaces
-		# myTest.puts(line) # Test to see if tabs to spaces change worked. Appears to be correct.
 		mapFile.push(line)
 	end
-	# myTest.puts(line)
 end
 f.close
-# myTest.close
-# puts mapFile
-
 
 
 # editMatchingAmino takes characterSearch and characterSearchIndex to find the corresponding 
 # similarity symbol ("*", ":", ",", " "). Also take mapLineIndex to track where the loop was in
 # the mapFile array
 def editMatchingAmino(characterSearch, characterSearchIndex, mapFile, mapLineIndex)
-	# puts "#{characterSearch}, #{characterSearchIndex}, #{mapLineIndex}"
 
 	# Starts the loop the line after where the match was found with the chainIdentifier.
 	# This will check each line for "%%%%%" to ensure it has not gone too far (this should never
@@ -63,7 +55,6 @@ def editMatchingAmino(characterSearch, characterSearchIndex, mapFile, mapLineInd
 
 			# ensures row is in range of characterSearchIndex
 			if numberOfElements >= characterSearchIndex
-				# p editMapLine
 				# This will give the index where the data starts; used to tell where to start
 				# counting on the third row.
 				dataIndexStart = editMapLine.index(holdLineArr[1])
@@ -73,7 +64,6 @@ def editMatchingAmino(characterSearch, characterSearchIndex, mapFile, mapLineInd
 				#current line
 				dataElementCount = (numberOfElements - holdLineArr[1].gsub("-", "").length())
 				mappedIndex = dataIndexStart # will store the total line index of the value we are searching
-				# p holdLineArr
 				holdLineArr[1].split("").each_with_index do |char, arrayIndex|
 					if char.match?(/[A-Z]/)
 					dataElementCount += 1
@@ -89,10 +79,7 @@ def editMatchingAmino(characterSearch, characterSearchIndex, mapFile, mapLineInd
 				# starting point (mapLineIndex + 1) to the .each_with_index index 
 				# (editMapFileIndex) and then add 1 to get the next line ( to access similarity 
 				# symbols).
-				# p ((mapLineIndex + 1) + (editMapFileIndex + 1)) # mapFile line number (symbol line)
-				# p mapFile[(mapLineIndex + 1) + (editMapFileIndex + 1)] # mapFile line
-				# puts "mappedIndex: #{mappedIndex}. dataIndexStart: #{dataIndexStart}, dataElementCount: #{dataElementCount}"
-				# p mapFile[(mapLineIndex + 1) + (editMapFileIndex + 1)][mappedIndex] # element from that line
+
 				return mapFile[(mapLineIndex + 1) + (editMapFileIndex + 1)][mappedIndex]
 
 			end # tests for correct line data character count
@@ -154,36 +141,10 @@ inputFile = File.open("#{inputFileName}.pdb", "r").each_with_index do |inputLine
 		end
 
 
-
-		# puts "#{index}, charSearch: #{characterSearch}, charSearchIndex: #{characterSearchIndex}"
-
 		# Now we search for characterSearch in the mapFile (database/lookup/map).
 		# We do this by looping through the mapFile. If a line contains 5 percent symbols (%%%%%)
 		# we split("%%%%%")[0] and further split(','). We check for a match. If no match, we move
 		# on, but if so, we call our editMatchingAmino() function.
-
-
-
-
-		# THIS BLOCK MOVED TO WHILE LOOP BELOW. KEEP UNTIL IT IS TESTED TO ENSURE WORKING. 
-		# WAS REDUNDANT: KEPT LOOPING WHEN FOUND MATCH
-		# mapFile.each_with_index do |mapLine, mapLineIndex|
-		# 	if mapLine.include?("%%%%%")
-		# 		chainIdentifier = mapLine.split("%%%%%")[0] # this will grab eg. "f,m,X"
-		# 		 # split to array eg ['f','m','X']
-		# 		chainIdentifierArray = chainIdentifier.gsub(/s+/, "").split(",")
-		# 		 # Compares each to chainIdentifier. 
-		# 		 # If there is a match, calls editMatchingAmino()
-		# 		chainIdentifierArray.each do |letter|
-		# 			if letter == characterSearch
-		# 				# puts "#{characterSearch}, #{characterSearchIndex}, #{mapLineIndex}"
-		# 				editMatchingAmino(characterSearch, characterSearchIndex.to_i, mapFile, mapLineIndex)
-		# 				break
-		# 			end
-		# 		end
-		# 	end
-		# end
-
 		mapFileIndex = 0
 		mapFileLoop = true
 		similarityCharacter = ""
@@ -196,7 +157,6 @@ inputFile = File.open("#{inputFileName}.pdb", "r").each_with_index do |inputLine
 				 # If there is a match, calls editMatchingAmino()
 				chainIdentifierArray.each do |letter|
 					if letter == characterSearch
-						# puts "#{characterSearch}, #{characterSearchIndex}, #{mapFile[mapFileIndex]Index}"
 						similarityCharacter = editMatchingAmino(characterSearch, characterSearchIndex.to_i, mapFile, mapFileIndex)
 						mapFileLoop = false
 						break
@@ -215,20 +175,14 @@ inputFile = File.open("#{inputFileName}.pdb", "r").each_with_index do |inputLine
 		case similarityCharacter
 		when "*" # 100% identical
 			newSimilarityValue = "1.00 " # QUESTION FOR KEVIN - SPACING AROUND 1 cause less character than others
-			# p similarityCharacter
 		when ":" # similar
 			newSimilarityValue = "25.00"
-			# p similarityCharacter
 		when "." # less similar
 			newSimilarityValue = "37.50"
-			# p similarityCharacter
 		when " " # no similarity
 			newSimilarityValue = "50.00"
-			# p similarityCharacter
 		else
-			# p similarityCharacter
 			newSimilarityValue = "50.00"
-			# puts "similarityCharacter error" # this could result from bad input
 		end
 
 		# rindex returns the last occurence of a given substring. We want to find the index of
@@ -245,6 +199,5 @@ inputFile = File.open("#{inputFileName}.pdb", "r").each_with_index do |inputLine
 	else
 		outputFile.puts(inputLine)
 	end
-	
 end
 
